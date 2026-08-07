@@ -1,0 +1,42 @@
+{
+  "expo": {
+    "name": "Evolua Mais",
+    "slug": "evolua-mais",
+    "scheme": "evoluamais",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.evoluamais.app",
+      "usesAppleSignIn": true
+    },
+
+    "android": {
+      "package": "com.evoluamais.app",
+      "predictiveBackGestureEnabled": false
+    },
+
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      "expo-font",
+      "expo-web-browser",
+      "expo-sqlite",
+      [
+        "expo-navigation-bar",
+        {
+          "enforceContrast": false
+        }
+      ]
+    ],
+
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "38aee0e1-70b1-436f-9669-236e51223830"
+      }
+    }
+  }
+}
