@@ -8,7 +8,7 @@ import {
 
 import { ButtonProps } from "./types";
 import { styles } from "./styles";
-import { colors } from "../../../theme";
+import { Colors } from "../../../theme";
 
 export function Button({
   title,
@@ -39,7 +39,7 @@ export function Button({
     >
       {loading ? (
         <ActivityIndicator
-          color={variant === "outline" ? colors.primary : "#FFF"}
+          color={variant === "outline" ? Colors.primary : "#FFF"}
         />
       ) : (
         <View

@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { colors, radius, spacing, typography } from "../../../theme";
+import { Colors, radius, spacing, Typography } from "../../../theme";
 
 export const styles = StyleSheet.create({
   button: {
@@ -13,30 +13,30 @@ export const styles = StyleSheet.create({
 
   title: {
     color: "#FFFFFF",
-    fontSize: typography.body,
+    fontSize: Typography.body.fontSize,
     fontWeight: "600",
   },
 
   primary: {
-    backgroundColor: colors.primary,
+    backgroundColor: Colors.primary,
   },
 
   secondary: {
-    backgroundColor: colors.success,
+    backgroundColor: Colors.success,
   },
 
   outline: {
     backgroundColor: "transparent",
     borderWidth: 1.5,
-    borderColor: colors.primary,
+    borderColor: Colors.primary,
   },
 
   danger: {
-    backgroundColor: colors.danger,
+    backgroundColor: Colors.danger,
   },
 
   outlineText: {
-    color: colors.primary,
+    color: Colors.primary,
   },
 
   disabled: {
