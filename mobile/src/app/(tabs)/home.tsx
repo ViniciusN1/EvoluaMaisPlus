@@ -26,6 +26,11 @@ import SleepCard from "../../components/home/SleepCard";
 import ImcCard from "../../components/home/ImcCard";
 import AiCard from "../../components/home/AiCard";
 
+import { useInjections } from "../../hooks/useInjections";
+import {
+  formatRelativeDay,
+  formatTime,
+} from "../../services/injection.service";
 import PrimaryButton from "../../components/ui/button/PrimaryButton";
 import SectionTitle from "../../components/ui/text/SectionTitle";
 
@@ -37,6 +42,14 @@ import {
 export default function HomeScreen() {
   const [refreshing, setRefreshing] =
     useState(false);
+
+  const {
+    treatment,
+    injections,
+    next: nextInjection,
+    refresh: refreshInjections,
+    confirmRegister,
+  } = useInjections();
 
   const initialWeight = useWeightStore(
     (state) => state.initialWeight,
@@ -93,9 +106,7 @@ export default function HomeScreen() {
         e chamá-la aqui.
       */
 
-      await new Promise((resolve) =>
-        setTimeout(resolve, 600),
-      );
+      await refreshInjections();
     } finally {
       setRefreshing(false);
     }
@@ -212,13 +223,21 @@ export default function HomeScreen() {
         <SectionTitle title="Seu tratamento" />
 
         <InjectionCard
-          medication="Mounjaro"
-          dose="7,5 mg"
-          nextApplication="Hoje"
-          time="20:00"
-          onRegister={
-            handleRegisterApplication
+          medication={treatment?.medication ?? "—"}
+          dose={treatment?.dose ?? ""}
+          nextApplication={
+            nextInjection
+              ? formatRelativeDay(nextInjection)
+              : injections.length === 0
+                ? "Registre a primeira"
+                : "Sem previsão"
           }
+          time={
+            nextInjection
+              ? formatTime(nextInjection)
+              : undefined
+          }
+          onRegister={confirmRegister}
         />
 
         <SectionTitle title="Resumo de hoje" />

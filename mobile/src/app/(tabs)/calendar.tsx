@@ -1,4 +1,7 @@
 import {
+  ActivityIndicator,
+  Pressable,
+  RefreshControl,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -12,13 +15,37 @@ import {
   Syringe,
 } from "lucide-react-native";
 
+import { useInjections } from "../../hooks/useInjections";
+import {
+  formatDay,
+  formatRelativeDay,
+  formatTime,
+} from "../../services/injection.service";
+
 export default function CalendarScreen() {
+  const {
+    treatment,
+    injections,
+    next,
+    loading,
+    error,
+    refresh,
+    confirmRegister,
+  } = useInjections();
+
+  const medicationLabel = treatment
+    ? `${treatment.medication} · ${treatment.dose}`
+    : "";
+
   return (
     <SafeAreaView style={styles.screen}>
       <StatusBar style="dark" />
 
       <ScrollView
         contentContainerStyle={styles.content}
+        refreshControl={
+          <RefreshControl refreshing={false} onRefresh={refresh} />
+        }
       >
         <Text style={styles.title}>
           Agenda
@@ -43,35 +70,51 @@ export default function CalendarScreen() {
             </Text>
 
             <Text style={styles.nextDate}>
-              Hoje, 20:00
+              {next
+                ? `${formatRelativeDay(next)}, ${formatTime(next)}`
+                : injections.length === 0
+                  ? "Registre sua primeira aplicação"
+                  : "Sem previsão automática"}
             </Text>
 
             <Text style={styles.nextMedication}>
-              Mounjaro · 7,5 mg
+              {medicationLabel}
             </Text>
           </View>
         </View>
+
+        <Pressable
+          style={styles.registerButton}
+          onPress={confirmRegister}
+          disabled={!treatment}
+        >
+          <Text style={styles.registerText}>
+            Registrar aplicação agora
+          </Text>
+        </Pressable>
+
+        {loading && <ActivityIndicator style={{ marginTop: 16 }} />}
+        {error && <Text style={styles.errorText}>{error}</Text>}
 
         <Text style={styles.sectionTitle}>
           Aplicações recentes
         </Text>
 
         <View style={styles.historyCard}>
-          <HistoryItem
-            date="28 de julho"
-            medication="Mounjaro · 7,5 mg"
-          />
-
-          <HistoryItem
-            date="21 de julho"
-            medication="Mounjaro · 7,5 mg"
-          />
-
-          <HistoryItem
-            date="14 de julho"
-            medication="Mounjaro · 5 mg"
-            last
-          />
+          {injections.length === 0 && !loading ? (
+            <Text style={styles.emptyText}>
+              Nenhuma aplicação registrada ainda.
+            </Text>
+          ) : (
+            injections.map((item, index) => (
+              <HistoryItem
+                key={item.id}
+                date={`${formatDay(item.appliedAt)}, ${formatTime(item.appliedAt)}`}
+                medication={`${item.medication} · ${item.dose}`}
+                last={index === injections.length - 1}
+              />
+            ))
+          )}
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -123,6 +166,27 @@ function HistoryItem({
 }
 
 const styles = StyleSheet.create({
+  registerButton: {
+    marginTop: 14,
+    backgroundColor: "#208AEF",
+    borderRadius: 16,
+    paddingVertical: 14,
+    alignItems: "center",
+  },
+  registerText: {
+    color: "#FFFFFF",
+    fontWeight: "800",
+    fontSize: 15,
+  },
+  errorText: {
+    color: "#DC2626",
+    marginTop: 12,
+  },
+  emptyText: {
+    color: "#64748B",
+    padding: 16,
+    textAlign: "center",
+  },
   screen: {
     flex: 1,
     backgroundColor: "#F6F8FC",
